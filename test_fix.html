@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>搜索修复测试 - 杭州</title>
+    <script src="js/videoData.js"></script>
+    <style>
+        .category-btn { margin: 5px; padding: 10px; border: 1px solid #ccc; cursor: pointer; }
+        .category-btn.active { background: #007bff; color: white; }
+        .test-result { margin: 20px 0; padding: 10px; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <h1>搜索修复测试 - 杭州</h1>
+    
+    <h2>分类按钮：</h2>
+    <div id="categories-container"></div>
+    
+    <h2>测试结果：</h2>
+    <div id="test-results"></div>
+    
+    <button onclick="testSelectCategory()">测试选择 dsygxl 分类</button>
+    <button onclick="testSelectCategory2()">测试选择 dsygxl2 分类</button>
+    
+    <script>
+        // 初始化分类按钮
+        function initCategories() {
+            const container = document.getElementById('categories-container');
+            window.categories.forEach(category => {
+                const btn = document.createElement('button');
+                btn.className = 'category-btn';
+                btn.dataset.category = category.id;
+                btn.textContent = category.name;
+                btn.onclick = function() {
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    document.getElementById('test-results').innerHTML += `<div class="test-result">点击了分类: ${category.name} (ID: ${category.id})</div>`;
+                };
+                container.appendChild(btn);
+            });
+        }
+        
+        // 测试选择分类（修复后的逻辑）
+        function selectCategory(categoryId) {
+            const categoryButtons = document.querySelectorAll('.category-btn');
+            categoryButtons.forEach(btn => {
+                // 优先使用 data-category 属性进行精确匹配
+                if (btn.dataset.category === categoryId) {
+                    console.log('找到分类按钮:', btn.textContent, 'ID:', btn.dataset.category);
+                    btn.click();
+                }
+            });
+        }
+        
+        function testSelectCategory() {
+            document.getElementById('test-results').innerHTML += '<div class="test-result"><strong>测试选择 dsygxl 分类:</strong></div>';
+            selectCategory('dsygxl');
+        }
+        
+        function testSelectCategory2() {
+            document.getElementById('test-results').innerHTML += '<div class="test-result"><strong>测试选择 dsygxl2 分类:</strong></div>';
+            selectCategory('dsygxl2');
+        }
+        
+        // 显示所有分类信息
+        function showCategoriesInfo() {
+            let info = '<h3>所有分类信息:</h3>';
+            window.categories.forEach(cat => {
+                info += `<div>${cat.name} (ID: ${cat.id})</div>`;
+            });
+            document.getElementById('test-results').innerHTML = info;
+        }
+        
+        window.onload = function() {
+            initCategories();
+            showCategoriesInfo();
+        };
+    </script>
+</body>
+</html>
